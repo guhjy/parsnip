@@ -22,7 +22,7 @@ mlp_keras_data <-
     fit = list(
       interface = "matrix",
       protect = c("x", "y"),
-      func = c(pkg = NULL, fun = "keras_mlp"),
+      func = c(pkg = "parsnip", fun = "keras_mlp"),
       defaults = list()
     ),
     pred = list(
@@ -155,7 +155,7 @@ keras_mlp <-
       else
         y <- matrix(y, ncol = 1)
     }
-    
+
     model <- keras::keras_model_sequential()
     if(decay > 0) {
       model %>%
