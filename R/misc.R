@@ -78,12 +78,6 @@ model_printer <- function(x, ...) {
   }
 }
 
-load_libs <- function(x, quiet) {
-  for (pkg in x$method$libs)
-    suppressPackageStartupMessages(requireNamespace(pkg, quietly = quiet))
-  invisible(x)
-}
-
 is_missing_arg <- function(x)
   identical(x, quote(missing_arg()))
 

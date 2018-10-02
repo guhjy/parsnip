@@ -101,17 +101,13 @@ fit.model_spec <-
       stop("`fit.model_spec` is for the formula methods. Use `fit_xy` instead.",
            call. = FALSE)
     cl <- match.call(expand.dots = TRUE)
-    # Create an environment with the evaluated argument objects. This will be
-    # used when a model call is made later.
-    eval_env <- rlang::env()
-    eval_env$data <- data
-    eval_env$formula <- formula
+
     fit_interface <-
-      check_interface(eval_env$formula, eval_env$data, cl, object)
+      check_interface(formula, data, cl, object)
     object$engine <- engine
     object <- check_engine(object)
 
-    if (engine == "spark" && !inherits(eval_env$data, "tbl_spark"))
+    if (engine == "spark" && !inherits(data, "tbl_spark"))
       stop(
         "spark objects can only be used with the formula interface to `fit` ",
         "with a spark data object.", call. = FALSE
@@ -121,8 +117,13 @@ fit.model_spec <-
     object <- get_method(object, engine = object$engine)
 
     check_installs(object)  # TODO rewrite with pkgman
-    # TODO Should probably just load the namespace
-    load_libs(object, control$verbosity < 2)
+
+    # Create an environment with the evaluated argument objects. This will be
+    # used when a model call is made later.
+    parent_env <- getNamespace(object$method$fit$func["pkg"])
+    eval_env <- rlang::new_environment(parent = parent_env)
+    eval_env$data <- data
+    eval_env$formula <- formula
 
     interfaces <- paste(fit_interface, object$method$fit$interface, sep = "_")
 
@@ -165,7 +166,7 @@ fit.model_spec <-
     model_classes <- class(res$fit)
     class(res) <- c(paste0("_", model_classes[1]), "model_fit")
     res
-}
+  }
 
 # ------------------------------------------------------------------------------
 
@@ -189,11 +190,9 @@ fit_xy.model_spec <-
            ...
   ) {
     cl <- match.call(expand.dots = TRUE)
-    eval_env <- rlang::env()
-    eval_env$x <- x
-    eval_env$y <- y
+
     fit_interface <-
-      check_xy_interface(eval_env$x, eval_env$y, cl, object)
+      check_xy_interface(x, y, cl, object)
     object$engine <- engine
     object <- check_engine(object)
 
@@ -207,8 +206,13 @@ fit_xy.model_spec <-
     object <- get_method(object, engine = object$engine)
 
     check_installs(object)  # TODO rewrite with pkgman
-    # TODO Should probably just load the namespace
-    load_libs(object, control$verbosity < 2)
+
+    # Create an environment with the evaluated argument objects. This will be
+    # used when a model call is made later.
+    parent_env <- getNamespace(object$method$fit$func["pkg"])
+    eval_env <- rlang::new_environment(parent = parent_env)
+    eval_env$x <- x
+    eval_env$y <- y
 
     interfaces <- paste(fit_interface, object$method$fit$interface, sep = "_")
 
