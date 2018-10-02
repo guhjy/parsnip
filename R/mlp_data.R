@@ -22,7 +22,7 @@ mlp_keras_data <-
     fit = list(
       interface = "matrix",
       protect = c("x", "y"),
-      func = c(pkg = "parsnip", fun = "keras_mlp"),
+      func = c(pkg = NULL, fun = "keras_mlp"),
       defaults = list()
     ),
     pred = list(

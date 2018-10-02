@@ -78,6 +78,18 @@ model_printer <- function(x, ...) {
   }
 }
 
+get_parent_env <- function(x) {
+
+  is_parsnip_internal <- ! (rlang::has_name(x$method$fit$func, "pkg"))
+
+  if(is_parsnip_internal) {
+    getNamespace("parsnip")
+  } else {
+    getNamespace(x$method$fit$func["pkg"])
+  }
+
+}
+
 is_missing_arg <- function(x)
   identical(x, quote(missing_arg()))
 

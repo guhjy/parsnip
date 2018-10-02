@@ -120,7 +120,7 @@ fit.model_spec <-
 
     # Create an environment with the evaluated argument objects. This will be
     # used when a model call is made later.
-    parent_env <- getNamespace(object$method$fit$func["pkg"])
+    parent_env <- get_parent_env(object)
     eval_env <- rlang::new_environment(parent = parent_env)
     eval_env$data <- data
     eval_env$formula <- formula
@@ -209,7 +209,7 @@ fit_xy.model_spec <-
 
     # Create an environment with the evaluated argument objects. This will be
     # used when a model call is made later.
-    parent_env <- getNamespace(object$method$fit$func["pkg"])
+    parent_env <- get_parent_env(object)
     eval_env <- rlang::new_environment(parent = parent_env)
     eval_env$x <- x
     eval_env$y <- y
